@@ -95,7 +95,7 @@ Goal → Stage → Deliverable
 
 ## Repo Plan
 
-The project will use the following repository structure:
+The project uses the following repository structure:
 
 ```text
 project/
@@ -105,19 +105,17 @@ project/
 ├── notebooks/
 ├── src/
 ├── docs/
+├── reports/
+├── model/
+├── requirements.txt
 └── README.md
-```
 
-### Folder Purpose
-
-* `data/` — stores raw and processed datasets used in the project.
-* `notebooks/` — contains Jupyter notebooks for exploration, preprocessing, modeling, and evaluation.
-* `src/` — contains reusable Python functions and project utilities.
-* `docs/` — contains stakeholder-facing documentation such as the stakeholder memo.
-* `README.md` — documents the project objective, lifecycle, assumptions, risks, and repository structure.
-
-The repository will be updated throughout the course as new lifecycle stages are completed.
-
-## AI Use Disclosure
-
-AI was used to help brainstorm the project structure and refine the wording of the initial project framing. The project topic, analysis decisions, code, interpretation, and final submitted work will be reviewed and developed based on my own understanding.
+## Folder Purpose
+data/raw/ — original datasets collected from external sources.
+data/processed/ — cleaned and transformed datasets ready for analysis.
+notebooks/ — Jupyter notebooks for exploration, preprocessing, modeling, and evaluation.
+src/ — reusable Python functions and project utilities.
+docs/ — stakeholder-facing documentation.
+reports/ — generated reports, figures, and analytical outputs.
+model/ — saved model files and model-related artifacts.
+requirements.txt — Python dependencies required to reproduce the project environment.
