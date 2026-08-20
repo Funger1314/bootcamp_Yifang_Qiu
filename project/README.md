@@ -1,6 +1,6 @@
 # Predicting Short-Term S&P 500 Volatility Using Market Stress and Interest Rate Indicators
 
-**Current progress:** Stages 01-06 complete - problem framing, tooling setup, Python fundamentals, data acquisition, storage, and preprocessing.
+**Current progress:** Stages 01-07 complete - problem framing, tooling setup, Python fundamentals, data acquisition, storage, preprocessing, and outlier-risk assessment.
 
 ## Problem Statement
 
@@ -85,7 +85,7 @@ Goal → Stage → Deliverable
 * Collect financial market indicators → **Data Acquisition / Ingestion (Stage 04)** → Reproducible API and web-scraping ingestion workflow
 * Organize and preserve collected data → **Data Storage (Stage 05)** → Versioned raw CSVs, processed Parquet data, and JSON lineage manifests
 * Clean and align financial time series → **Data Preprocessing (Stage 06)** → Validated, type-corrected and scaled analysis-ready dataset
-* Investigate extreme market observations → **Outlier Analysis** → Outlier and sensitivity analysis
+* Investigate extreme market observations → **Outlier Analysis (Stage 07)** → IQR/Z-score flags, treatment sensitivity table, and documented risk assumptions
 * Understand relationships among variables → **Exploratory Data Analysis** → Summary statistics and visualizations
 * Construct predictive variables → **Feature Engineering** → Model-ready feature set
 * Predict future 5-day volatility → **Modeling** → Regression and/or time-series model
@@ -131,4 +131,4 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-The Stage 03 homework is available in `../homework/homework03/`. It demonstrates the foundational NumPy and pandas workflow used by the Stage 04 ingestion notebook in `../homework/homework04/`, the Stage 05 storage workflow in `../homework/homework05/`, and the Stage 06 preprocessing workflow in `../homework/homework06/`.
+The Stage 03 homework is available in `../homework/homework03/`. It demonstrates the foundational NumPy and pandas workflow used by the Stage 04 ingestion notebook in `../homework/homework04/`, the Stage 05 storage workflow in `../homework/homework05/`, the Stage 06 preprocessing workflow in `../homework/homework06/`, and the Stage 07 outlier-risk analysis in `../homework/homework07/`.
