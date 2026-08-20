@@ -1,0 +1,36 @@
+{
+  "dataset": "S&P 500 daily prices",
+  "retrieved_for_storage_at_utc": "2026-08-20T04:58:37.197094+00:00",
+  "source": {
+    "stage": "Stage 04",
+    "file": "homework/homework04/data/raw/api_yahoo-finance_GSPC_20260820-0454.csv",
+    "provider": "Yahoo Finance public chart endpoint"
+  },
+  "schema": {
+    "date": "datetime64[ns]",
+    "ticker": "object",
+    "open": "float64",
+    "high": "float64",
+    "low": "float64",
+    "close": "float64",
+    "volume": "int64"
+  },
+  "outputs": {
+    "raw_csv": "homework/homework05/data/raw/sp500_prices_20260820-045835.csv",
+    "processed_parquet": "homework/homework05/data/processed/sp500_prices_with_returns_20260820-045835.parquet"
+  },
+  "validations": {
+    "raw_csv": {
+      "shape_equal": true,
+      "columns_equal": true,
+      "date_is_datetime": true,
+      "close_is_numeric": true
+    },
+    "processed_parquet": {
+      "shape_equal": true,
+      "columns_equal": true,
+      "date_is_datetime": true,
+      "close_is_numeric": true
+    }
+  }
+}
