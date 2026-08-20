@@ -1,6 +1,6 @@
 # Predicting Short-Term S&P 500 Volatility Using Market Stress and Interest Rate Indicators
 
-**Current progress:** Stages 01-05 complete - problem framing, tooling setup, Python fundamentals, data acquisition, and data storage.
+**Current progress:** Stages 01-06 complete - problem framing, tooling setup, Python fundamentals, data acquisition, storage, and preprocessing.
 
 ## Problem Statement
 
@@ -84,7 +84,7 @@ Goal → Stage → Deliverable
 * Build reusable Python functions → **Python Fundamentals (Stage 03)** → Utility functions and Python notebook
 * Collect financial market indicators → **Data Acquisition / Ingestion (Stage 04)** → Reproducible API and web-scraping ingestion workflow
 * Organize and preserve collected data → **Data Storage (Stage 05)** → Versioned raw CSVs, processed Parquet data, and JSON lineage manifests
-* Clean and align financial time series → **Data Preprocessing** → Analysis-ready dataset
+* Clean and align financial time series → **Data Preprocessing (Stage 06)** → Validated, type-corrected and scaled analysis-ready dataset
 * Investigate extreme market observations → **Outlier Analysis** → Outlier and sensitivity analysis
 * Understand relationships among variables → **Exploratory Data Analysis** → Summary statistics and visualizations
 * Construct predictive variables → **Feature Engineering** → Model-ready feature set
@@ -131,4 +131,4 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-The Stage 03 homework is available in `../homework/homework03/`. It demonstrates the foundational NumPy and pandas workflow used by the Stage 04 ingestion notebook in `../homework/homework04/` and the Stage 05 storage workflow in `../homework/homework05/`.
+The Stage 03 homework is available in `../homework/homework03/`. It demonstrates the foundational NumPy and pandas workflow used by the Stage 04 ingestion notebook in `../homework/homework04/`, the Stage 05 storage workflow in `../homework/homework05/`, and the Stage 06 preprocessing workflow in `../homework/homework06/`.

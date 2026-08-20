@@ -1,0 +1,22 @@
+{
+  "source_fixture": "homework/homework06/data/raw/sp500_prices_dirty_fixture_20260820-050305.csv",
+  "source_stage05_file": "homework/homework05/data/raw/sp500_prices_20260820-045835.csv",
+  "cleaning_decisions": {
+    "invalid_dates_dropped": 1,
+    "close_missing_interpolated": 1,
+    "volume_missing_median_filled": 1
+  },
+  "validation_results": {
+    "no_missing_values": true,
+    "date_is_datetime": true,
+    "close_is_numeric": true,
+    "positive_prices": true,
+    "nonnegative_volume": true,
+    "dates_sorted": true
+  },
+  "outputs": {
+    "csv": "homework/homework06/data/processed/sp500_prices_cleaned_20260820-050305.csv",
+    "parquet": "homework/homework06/data/processed/sp500_prices_cleaned_20260820-050305.parquet",
+    "missingness_plot": "homework/homework06/data/processed/missingness_before_cleaning_20260820-050305.png"
+  }
+}
