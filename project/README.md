@@ -1,6 +1,6 @@
 # Predicting Short-Term S&P 500 Volatility Using Market Stress and Interest Rate Indicators
 
-**Current progress:** Stages 01-03 complete - problem framing, tooling setup, and Python fundamentals.
+**Current progress:** Stages 01-04 complete - problem framing, tooling setup, Python fundamentals, and data acquisition.
 
 ## Problem Statement
 
@@ -82,7 +82,7 @@ Goal → Stage → Deliverable
 * Define the financial risk problem and identify the stakeholder → **Problem Framing & Scoping (Stage 01)** → Problem statement and stakeholder memo
 * Establish a reproducible project structure → **Tooling Setup (Stage 02)** → Organized GitHub repository and development environment
 * Build reusable Python functions → **Python Fundamentals (Stage 03)** → Utility functions and Python notebook
-* Collect financial market indicators → **Data Acquisition / Ingestion** → Raw market dataset
+* Collect financial market indicators → **Data Acquisition / Ingestion (Stage 04)** → Reproducible API and web-scraping ingestion workflow
 * Organize and preserve collected data → **Data Storage** → Structured raw and processed datasets
 * Clean and align financial time series → **Data Preprocessing** → Analysis-ready dataset
 * Investigate extreme market observations → **Outlier Analysis** → Outlier and sensitivity analysis
@@ -131,4 +131,4 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-The Stage 03 homework is available in `../homework/homework03/`. It demonstrates the foundational NumPy and pandas workflow that will be reused when real market data are added in a later stage.
+The Stage 03 homework is available in `../homework/homework03/`. It demonstrates the foundational NumPy and pandas workflow used by the Stage 04 ingestion notebook in `../homework/homework04/`.
