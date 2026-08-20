@@ -1,6 +1,6 @@
 # Predicting Short-Term S&P 500 Volatility Using Market Stress and Interest Rate Indicators
 
-**Stage:** Problem Framing & Scoping (Stage 01)
+**Current progress:** Stages 01-03 complete - problem framing, tooling setup, and Python fundamentals.
 
 ## Problem Statement
 
@@ -109,6 +109,7 @@ project/
 ├── model/
 ├── requirements.txt
 └── README.md
+```
 
 ## Folder Purpose
 data/raw/ — original datasets collected from external sources.
@@ -119,3 +120,15 @@ docs/ — stakeholder-facing documentation.
 reports/ — generated reports, figures, and analytical outputs.
 model/ — saved model files and model-related artifacts.
 requirements.txt — Python dependencies required to reproduce the project environment.
+
+## Setup
+
+Create and activate a virtual environment, then install the project dependencies:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+The Stage 03 homework is available in `../homework/homework03/`. It demonstrates the foundational NumPy and pandas workflow that will be reused when real market data are added in a later stage.

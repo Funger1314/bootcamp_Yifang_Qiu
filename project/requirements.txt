@@ -1,5 +1,6 @@
 numpy
 pandas
 jupyterlab
+matplotlib
 python-dotenv
 requests
