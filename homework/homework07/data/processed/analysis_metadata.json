@@ -1,0 +1,35 @@
+{
+  "source_file": "homework/homework07/data/raw/outliers_homework.csv",
+  "source_sha256": "97cf6c1eb6c1e45f2c4529098536ffebf19b22f15a7c33113abe5120595a3551",
+  "random_seed": 17,
+  "required_functions": [
+    "detect_outliers_iqr",
+    "detect_outliers_zscore",
+    "winsorize_series"
+  ],
+  "parameters": {
+    "iqr_k": 1.5,
+    "zscore_threshold": 3.0,
+    "winsor_lower": 0.05,
+    "winsor_upper": 0.95
+  },
+  "flag_counts": {
+    "iqr": 9,
+    "zscore": 5,
+    "either": 9,
+    "both": 5
+  },
+  "validation": {
+    "raw_rows": 115,
+    "no_missing_values": true,
+    "boolean_flags": true,
+    "three_treatments": true
+  },
+  "outputs": {
+    "flags": "homework/homework07/data/processed/outlier_flags.csv",
+    "summary": "homework/homework07/data/processed/sensitivity_summary.csv",
+    "regression": "homework/homework07/data/processed/regression_sensitivity.csv",
+    "distribution_plot": "homework/homework07/reports/outlier_treatment_comparison.png",
+    "residual_plot": "homework/homework07/reports/regression_residual_sensitivity.png"
+  }
+}

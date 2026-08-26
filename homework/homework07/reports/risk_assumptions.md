@@ -1,7 +1,10 @@
 # Stage 07 Risk Assumptions
 
-- The analysis uses Stage 06 daily returns after excluding the first row, whose zero return was inserted only because no prior close was available.
-- IQR outliers use Tukey fences with multiplier `1.5`; Z-score outliers use absolute Z-score greater than `3.0`; winsorization clips returns at the 5th and 95th percentiles.
-- The data contain 18 daily-return observations from January 2025. This is too small and narrow a window to characterize market tail risk.
-- Removing a flagged return can remove a data error, but it can also remove a meaningful market-stress event. The original return series is therefore preserved and all three treatment results are reported.
-- The volume-to-return regression is a sensitivity device, not a trading model or causal claim. Any future model must split data in time and fit preprocessing decisions on training data only.
+- The notebook uses the starter-generated 115-row dataset saved at `data/raw/outliers_homework.csv` with NumPy seed `17`.
+- The primary rule is Tukey IQR with `k=1.5`; the secondary rule is absolute population Z-score above `3.0`.
+- Winsorization at the 5th/95th percentiles is reported as a sensitivity treatment, not as a correction of known errors.
+- IQR flags 9 observations and Z-score flags 5; all 5 Z-score flags are also IQR flags.
+- IQR filtering reduces sample return standard deviation from approximately `0.0406` to `0.0094`, but regression R-squared also falls from `0.962` to `0.574` because the shared shocks carry correlation.
+- Removing an extreme can remove a data error or erase a valid stress event. The original data and boolean flags are preserved, and no treatment is silently selected as “correct.”
+- The regression is descriptive and in-sample. It is not a causal model, forecast, or trading rule.
+- Real decisions require longer time coverage, source investigation, time-aware validation, and stakeholder approval of any exclusion rule.
