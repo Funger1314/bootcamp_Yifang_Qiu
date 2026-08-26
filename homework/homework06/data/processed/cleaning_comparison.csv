@@ -1,0 +1,7 @@
+metric,original,cleaned
+rows,20,19
+columns,7,10
+total_missing_cells,2,0
+invalid_dates,1,0
+duplicate_rows,0,0
+numeric_columns,3,8

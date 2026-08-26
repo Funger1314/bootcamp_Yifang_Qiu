@@ -1,0 +1,39 @@
+{
+  "source_file": "homework\\homework06\\data\\raw\\sp500_prices_dirty_fixture_20260820-050305.csv",
+  "required_functions": [
+    "fill_missing_median",
+    "drop_missing",
+    "normalize_data"
+  ],
+  "cleaning_decisions": {
+    "invalid_dates_dropped": 1,
+    "median_values_filled": {
+      "close": 1,
+      "volume": 1
+    },
+    "normalization": {
+      "close": "minmax",
+      "volume": "zscore"
+    }
+  },
+  "validation_results": {
+    "no_missing_values": true,
+    "date_is_datetime": true,
+    "close_is_numeric": true,
+    "positive_prices": true,
+    "nonnegative_volume": true,
+    "dates_sorted": true
+  },
+  "assumptions": [
+    "Missing values and the invalid date were deliberately introduced for this teaching fixture.",
+    "An invalid date is dropped because the row cannot be placed chronologically.",
+    "Median imputation is deterministic and robust to extremes but reduces variability.",
+    "Scaling is descriptive here; production fitting must use training data only."
+  ],
+  "outputs": {
+    "csv": "homework\\homework06\\data\\processed\\sp500_prices_cleaned.csv",
+    "parquet": "homework\\homework06\\data\\processed\\sp500_prices_cleaned.parquet",
+    "comparison": "homework\\homework06\\data\\processed\\cleaning_comparison.csv",
+    "missingness_plot": "homework\\homework06\\data\\processed\\missingness_before_cleaning.png"
+  }
+}

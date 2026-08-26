@@ -1,7 +1,8 @@
 """Reusable market-data preprocessing helpers for Stage 06."""
 
 import pandas as pd
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
+
+from .cleaning import drop_missing, fill_missing_median, normalize_data
 
 
 PRICE_COLUMNS = ["open", "high", "low", "close", "volume"]
@@ -17,13 +18,14 @@ def missingness_summary(dataframe: pd.DataFrame) -> pd.DataFrame:
 
 
 def clean_market_prices(dataframe: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
-    """Correct common market-data types and apply documented missing-data rules."""
+    """Apply the Stage 06 functions to market data and record decisions."""
     cleaned = dataframe.copy()
     decisions = {}
 
     cleaned["date"] = pd.to_datetime(cleaned["date"], errors="coerce")
     invalid_date_count = int(cleaned["date"].isna().sum())
-    cleaned = cleaned.dropna(subset=["date"]).sort_values("date").reset_index(drop=True)
+    cleaned = drop_missing(cleaned, subset=["date"])
+    cleaned = cleaned.sort_values("date").reset_index(drop=True)
     decisions["invalid_dates_dropped"] = invalid_date_count
 
     cleaned["ticker"] = cleaned["ticker"].astype("string").str.strip().str.upper().astype("category")
@@ -31,19 +33,20 @@ def clean_market_prices(dataframe: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
         values = cleaned[column].astype("string").str.replace("$", "", regex=False).str.replace(",", "", regex=False)
         cleaned[column] = pd.to_numeric(values, errors="coerce")
 
-    close_missing = int(cleaned["close"].isna().sum())
-    cleaned = cleaned.set_index("date")
-    cleaned["close"] = cleaned["close"].interpolate(method="time")
-    cleaned = cleaned.reset_index()
-    decisions["close_missing_interpolated"] = close_missing
-
-    volume_missing = int(cleaned["volume"].isna().sum())
-    cleaned["volume"] = cleaned["volume"].fillna(cleaned["volume"].median())
-    decisions["volume_missing_median_filled"] = volume_missing
+    missing_before = {
+        column: int(cleaned[column].isna().sum())
+        for column in ["close", "volume"]
+    }
+    cleaned = fill_missing_median(cleaned, ["close", "volume"])
+    decisions["median_values_filled"] = missing_before
 
     cleaned["daily_return"] = cleaned["close"].pct_change(fill_method=None).fillna(0.0)
-    cleaned["close_minmax"] = MinMaxScaler().fit_transform(cleaned[["close"]])
-    cleaned["volume_zscore"] = StandardScaler().fit_transform(cleaned[["volume"]])
+    cleaned = normalize_data(cleaned, ["close"], method="minmax", suffix="_minmax")
+    cleaned = normalize_data(cleaned, ["volume"], method="zscore", suffix="_zscore")
+    decisions["normalization"] = {
+        "close": "minmax",
+        "volume": "zscore",
+    }
     return cleaned, decisions
 
 
