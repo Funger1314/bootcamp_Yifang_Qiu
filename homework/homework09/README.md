@@ -2,6 +2,8 @@
 
 This homework creates model-ready features for the S&P 500 volatility project from the Stage 06 cleaned time series. The design keeps predictors available at time `t` and creates the future five-trading-day realized-volatility target separately.
 
+The submission now directly addresses the Stage 09 grading rubric: at least three engineered features, a categorical encoding, clear feature rationales tied to Stage 08 EDA, reproducible helper code in `src/features.py`, and a correlation check for every engineered feature.
+
 ## Features
 
 - Return lags: 1-day and 3-day lagged daily returns.
@@ -12,6 +14,17 @@ This homework creates model-ready features for the S&P 500 volatility project fr
 - Interaction: lagged return multiplied by 1-day volume change.
 - Target: forward 5-day realized volatility, computed only from returns after time `t`.
 
+## Stage 08 EDA Connection
+
+- Stage 08 found a short chronological January 2025 sample with no missing values after cleaning, so the Stage 09 notebook uses time-aware lag and rolling features instead of random-row transformations.
+- Daily returns showed meaningful short-run variation, motivating `return_lag_1`, `return_lag_3`, `return_rolling_mean_3`, and `return_rolling_volatility_5`.
+- Volume had a much larger scale than returns, motivating `log_volume`, `volume_pct_change_1`, and `volume_relative_to_5d`.
+- Calendar information is available before modeling, so weekday one-hot features provide the required categorical encoding while avoiding look-ahead leakage.
+
+## Correlation Check
+
+The notebook writes `data/processed/feature_target_checks.csv` and `reports/feature_target_correlations.png`. In the current small sample, the strongest screening relationships with future 5-day realized volatility are `close_relative_to_3d`, `return_lag_1`, `weekday_Monday`, `volume_pct_change_1`, and `return_lag_1_x_volume_change_1`. These are treated as feature-screening evidence only because the model-ready sample has 8 rows.
+
 ## Provided Materials Assessment
 
 - `stage09_feature-engineering_lecture-notebook.ipynb` informed the rolling, encoding, interaction, and temporal-feature design.
@@ -21,9 +34,11 @@ This homework creates model-ready features for the S&P 500 volatility project fr
 ## Contents
 
 - `homework09_feature-engineering_submission.ipynb`: executed feature-engineering workflow.
-- `data/processed/`: full engineered data, model-ready data, feature registry, and provenance metadata.
-- `reports/`: feature overview chart and assumption record.
-- `src/feature_utils.py`: reusable leakage-aware feature and validation functions.
+- `data/processed/`: full engineered data, model-ready data, feature registry, feature rationale, target checks, and provenance metadata.
+- `reports/`: feature overview chart, feature-target correlation chart, and assumption record.
+- `src/features.py`: reusable leakage-aware feature and validation functions required by the assignment.
+- `src/feature_utils.py`: compatibility wrapper for older imports.
+- `tests/test_features.py`: lightweight regression tests for feature generation and validation.
 
 ## Run
 

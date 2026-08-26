@@ -1,0 +1,92 @@
+{
+  "return_lag_1": {
+    "definition": "Daily return at t-1.",
+    "rationale": "Stage 08 showed daily returns move around a near-zero center, so yesterday's return may summarize recent momentum or reversal pressure.",
+    "eda_link": "Stage 08 return distribution and time-series plot.",
+    "leakage_note": "Uses only the previous trading day's return."
+  },
+  "return_lag_3": {
+    "definition": "Daily return at t-3.",
+    "rationale": "Adds short-memory return behavior without duplicating the one-day lag.",
+    "eda_link": "Stage 08 time-series movement in daily returns.",
+    "leakage_note": "Uses only the return three trading days before date t."
+  },
+  "return_rolling_mean_3": {
+    "definition": "Mean return from t-3 through t-1.",
+    "rationale": "Smooths noisy daily returns into a recent directional signal.",
+    "eda_link": "Stage 08 found return volatility and short sample swings, making a smoothed signal more stable than a single return.",
+    "leakage_note": "Returns are shifted before rolling, so the current and future returns are excluded."
+  },
+  "return_rolling_volatility_5": {
+    "definition": "Population standard deviation of returns from t-5 through t-1.",
+    "rationale": "Recent realized volatility is a natural predictor for near-future volatility clustering.",
+    "eda_link": "Stage 08 distribution and boxplot highlighted variation in daily returns.",
+    "leakage_note": "Uses only prior returns."
+  },
+  "volume_pct_change_1": {
+    "definition": "Current volume percent change from t-1.",
+    "rationale": "Sudden activity changes can coincide with market stress or information arrival.",
+    "eda_link": "Stage 08 volume distribution showed variation across trading days.",
+    "leakage_note": "Uses current volume and the previous day's volume, both available at date t close."
+  },
+  "volume_relative_to_5d": {
+    "definition": "Current volume divided by mean volume from t-5 through t-1.",
+    "rationale": "Compares today's trading activity with recent baseline activity.",
+    "eda_link": "Stage 08 volume analysis suggested scale differences that are easier to interpret as a relative measure.",
+    "leakage_note": "The comparison baseline uses only prior volume."
+  },
+  "log_volume": {
+    "definition": "Natural logarithm of current volume.",
+    "rationale": "Reduces the scale of large volume counts while preserving order.",
+    "eda_link": "Stage 08 descriptive statistics showed volume is much larger in scale than return features.",
+    "leakage_note": "Uses only current-date volume."
+  },
+  "close_relative_to_3d": {
+    "definition": "Current close relative to the mean close from t-3 through t-1.",
+    "rationale": "Measures whether price is extended relative to a short prior baseline.",
+    "eda_link": "Stage 08 price trend plot showed short-run level changes.",
+    "leakage_note": "The denominator uses only prior closes."
+  },
+  "return_lag_1_x_volume_change_1": {
+    "definition": "Lagged return multiplied by current one-day volume change.",
+    "rationale": "Combines direction and activity, allowing high-volume moves to carry different information than quiet moves.",
+    "eda_link": "Stage 08 bivariate checks considered return, volume, and price relationships.",
+    "leakage_note": "Uses lagged return and current volume change only."
+  },
+  "future_5d_realized_volatility": {
+    "definition": "Population standard deviation of returns from t+1 through t+5.",
+    "rationale": "Target for later supervised modeling, not an input feature.",
+    "eda_link": "Stage 08 framed future volatility as the likely modeling target.",
+    "leakage_note": "Future-only calculation is excluded from predictors."
+  },
+  "weekday_Friday": {
+    "definition": "One-hot indicator for Friday.",
+    "rationale": "Encodes the categorical day-of-week field required by the assignment and tests whether weekday patterns carry signal.",
+    "eda_link": "Stage 08 noted the sample is chronological and short, so calendar effects must be treated as tentative.",
+    "leakage_note": "Calendar information is known at date t."
+  },
+  "weekday_Monday": {
+    "definition": "One-hot indicator for Monday.",
+    "rationale": "Encodes the categorical day-of-week field required by the assignment and tests whether weekday patterns carry signal.",
+    "eda_link": "Stage 08 noted the sample is chronological and short, so calendar effects must be treated as tentative.",
+    "leakage_note": "Calendar information is known at date t."
+  },
+  "weekday_Thursday": {
+    "definition": "One-hot indicator for Thursday.",
+    "rationale": "Encodes the categorical day-of-week field required by the assignment and tests whether weekday patterns carry signal.",
+    "eda_link": "Stage 08 noted the sample is chronological and short, so calendar effects must be treated as tentative.",
+    "leakage_note": "Calendar information is known at date t."
+  },
+  "weekday_Tuesday": {
+    "definition": "One-hot indicator for Tuesday.",
+    "rationale": "Encodes the categorical day-of-week field required by the assignment and tests whether weekday patterns carry signal.",
+    "eda_link": "Stage 08 noted the sample is chronological and short, so calendar effects must be treated as tentative.",
+    "leakage_note": "Calendar information is known at date t."
+  },
+  "weekday_Wednesday": {
+    "definition": "One-hot indicator for Wednesday.",
+    "rationale": "Encodes the categorical day-of-week field required by the assignment and tests whether weekday patterns carry signal.",
+    "eda_link": "Stage 08 noted the sample is chronological and short, so calendar effects must be treated as tentative.",
+    "leakage_note": "Calendar information is known at date t."
+  }
+}
