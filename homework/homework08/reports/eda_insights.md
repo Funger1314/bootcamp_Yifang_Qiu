@@ -1,7 +1,16 @@
 # Stage 08 EDA Insights
 
-- The analysis contains 18 usable daily returns and no missing values after Stage 06 preprocessing.
-- The largest absolute return was 1.83% on 2025-01-15. This observation remains below the Stage 07 IQR and Z-score thresholds, but it should remain visible in later model diagnostics.
-- The strongest non-duplicate correlation is between `close` and `daily_return` (0.19). Correlation in this short sample is descriptive, not causal.
-- Next feature hypotheses: lagged returns, rolling volatility, and volume-relative features. Each must be calculated without using future observations.
-- Limitation: January 2025 alone cannot represent calm, stressed, or changing market regimes. A longer data history is required before model evaluation.
+## Top 3 Insights
+1. The index rose 2.93% over the observed month, but 19 prices are insufficient to establish a persistent trend or seasonality.
+2. The largest daily move was -2.66% on 2025-01-10, and return skewness is -1.00; later diagnostics should retain visibility of downside tail behavior.
+3. The strongest displayed correlation is `close` versus `daily_return` (0.28), which is too weak and sample-dependent to support a causal or predictive claim.
+
+## Assumptions & Risks
+- Stage 06 schema, cleaning, and trading-date coverage are assumed correct.
+- The single-ticker, one-month sample excludes other assets and market regimes.
+- Calendar gaps reflect non-trading days; they are not filled as if prices were observed.
+- Correlation is descriptive and may be unstable in a larger or later sample.
+
+## Implications for Next Step
+- Stage 09: create lagged returns, rolling volatility, and volume-relative features using only past data.
+- Stage 10b: preserve chronological order, compare against simple baselines, and evaluate performance on later unseen periods.

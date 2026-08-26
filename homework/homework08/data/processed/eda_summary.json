@@ -1,0 +1,66 @@
+{
+  "source_file": "homework/homework06/data/processed/sp500_prices_cleaned.parquet",
+  "price_observations": 19,
+  "return_observations": 18,
+  "missing_values": {
+    "date": 0,
+    "ticker": 0,
+    "open": 0,
+    "high": 0,
+    "low": 0,
+    "close": 0,
+    "volume": 0,
+    "daily_return": 0,
+    "close_minmax": 0,
+    "volume_zscore": 0
+  },
+  "period_return": 0.029305365039064002,
+  "largest_absolute_return": {
+    "date": "2025-01-10",
+    "daily_return": -0.026558548083701727
+  },
+  "strongest_pairwise_correlation": {
+    "variables": [
+      "close",
+      "daily_return"
+    ],
+    "value": 0.28169277000234416
+  },
+  "attention_flags": {
+    "close": {
+      "missing_count": 0,
+      "absolute_skew_over_1": false,
+      "iqr_outlier_count": 0
+    },
+    "volume": {
+      "missing_count": 0,
+      "absolute_skew_over_1": false,
+      "iqr_outlier_count": 1
+    },
+    "daily_return": {
+      "missing_count": 0,
+      "absolute_skew_over_1": true,
+      "iqr_outlier_count": 1
+    },
+    "close_minmax": {
+      "missing_count": 0,
+      "absolute_skew_over_1": false,
+      "iqr_outlier_count": 0
+    },
+    "volume_zscore": {
+      "missing_count": 0,
+      "absolute_skew_over_1": false,
+      "iqr_outlier_count": 1
+    }
+  },
+  "outputs": {
+    "numeric_profile": "homework/homework08/data/processed/numeric_profile.csv",
+    "categorical_profile": "homework/homework08/data/processed/categorical_profile.csv",
+    "correlation": "homework/homework08/data/processed/correlation_matrix.csv",
+    "categorical_plot": "homework/homework08/reports/eda_categorical_counts.png",
+    "distribution_plot": "homework/homework08/reports/eda_distributions.png",
+    "relationship_plot": "homework/homework08/reports/eda_relationships.png",
+    "correlation_plot": "homework/homework08/reports/eda_correlation_matrix.png",
+    "time_series_plot": "homework/homework08/reports/eda_time_series.png"
+  }
+}
