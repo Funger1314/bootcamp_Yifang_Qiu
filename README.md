@@ -6,7 +6,13 @@
 GitHub.
 
 ## Homework Folder Rules
-- Each homework will be in its own subfolder (`homework0`, `homework1`, etc.)
+- Each graded homework uses a zero-padded stage folder (`homework01`, `homework02`, etc.).
 - Include all required files for grading.
+
+Current early-stage submissions:
+
+- `homework/homework01/README.md` - problem framing and scoping.
+- `homework/homework02/` - tooling setup notebook and configuration template.
+
 ## Project Folder Rules
 - Keep project files organized and clearly named.

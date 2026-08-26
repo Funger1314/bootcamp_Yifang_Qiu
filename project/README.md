@@ -21,7 +21,11 @@ Key stakeholder concerns include:
 * How reliable the model is during both normal and stressed market conditions.
 * Whether the results are sufficiently interpretable to support risk-management decisions.
 
-The analysis could be reviewed as part of a regular portfolio risk-monitoring process.
+### Decision owner and operating context
+
+The **portfolio risk manager** owns the decision to escalate monitoring or recommend a temporary reduction in portfolio risk exposure. A **risk analyst** will operate the workflow after each trading day closes, review the next-five-day forecast before the following market open, and publish the output for the portfolio manager and portfolio-management team.
+
+The forecast will trigger an elevated-risk review when predicted five-day realized volatility is above the rolling historical 80th percentile or, if the classification extension is used, when the estimated high-volatility probability is at least 60%. The model informs a human review; it does not automatically execute trades.
 
 ## Useful Answer & Decision
 
@@ -40,17 +44,19 @@ Possible model inputs include:
 
 The project may also convert future volatility into a classification problem by defining a **high-volatility regime** and estimating the probability that the market will enter that regime during the next five trading days.
 
-Model performance may be evaluated using metrics such as:
+### Measurable success criteria
 
-* MAE
-* RMSE
-* R² for regression
-* Precision
-* Recall
-* F1 score
-* ROC-AUC for classification
+The project will be considered decision-useful when all required criteria below are met on a chronological, held-out test period:
 
-The final deliverable should help the stakeholder decide whether current conditions justify increased risk monitoring or changes in portfolio risk exposure.
+* Regression MAE improves by at least **10%** relative to a naive baseline that uses the most recent available five-day realized volatility.
+* Regression RMSE improves by at least **5%** relative to the same baseline.
+* Forecasts are produced for at least **95%** of eligible trading days after data alignment.
+* The final report displays the forecast, baseline comparison, uncertainty or error information, and the variables that most influenced the result.
+* A clean environment can reproduce the processed data and evaluation outputs using the documented setup without manual code edits.
+
+If a high-volatility classification extension is delivered, its additional targets are ROC-AUC of at least **0.70** and recall of at least **0.70** for the high-volatility class. Failure to meet a threshold will be reported transparently rather than hidden or redefined after testing.
+
+The concrete final artifacts will be a reproducible modeling notebook, `data/processed/volatility_forecasts.csv`, and a stakeholder-facing `reports/volatility_risk_report.html`. Together they will help the decision owner determine whether current conditions justify increased monitoring or changes in portfolio risk exposure.
 
 ## Assumptions & Constraints
 
@@ -99,11 +105,15 @@ The project uses the following repository structure:
 
 ```text
 project/
+├── .env.example
+├── .gitignore
 ├── data/
 │   ├── raw/
 │   └── processed/
 ├── notebooks/
 ├── src/
+│   ├── config.py
+│   └── utils.py
 ├── docs/
 ├── reports/
 ├── model/
@@ -120,6 +130,9 @@ docs/ — stakeholder-facing documentation.
 reports/ — generated reports, figures, and analytical outputs.
 model/ — saved model files and model-related artifacts.
 requirements.txt — Python dependencies required to reproduce the project environment.
+.env.example — shareable configuration template; real `.env` values remain local.
+.gitignore — excludes secrets, virtual environments, caches, and system clutter.
+src/config.py — reusable environment and path configuration helper.
 
 ## Setup
 
