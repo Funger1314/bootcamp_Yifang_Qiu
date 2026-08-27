@@ -1,0 +1,63 @@
+{
+  "end_date": "2026-08-26",
+  "project": "Predicting Short-Term S&P 500 Volatility",
+  "sources": {
+    "sp500": {
+      "columns": [
+        "Date",
+        "Open",
+        "High",
+        "Low",
+        "Close",
+        "Volume"
+      ],
+      "file": "data\\raw\\sp500_yahoo.csv",
+      "max_date": "2026-08-26",
+      "min_date": "2018-01-02",
+      "rows": 2174,
+      "source": "yahoo",
+      "symbol": "^GSPC"
+    },
+    "treasury_10y": {
+      "columns": [
+        "observation_date",
+        "DGS10"
+      ],
+      "file": "data\\raw\\treasury_10y_fred.csv",
+      "max_date": "2026-08-25",
+      "min_date": "2018-01-01",
+      "rows": 2257,
+      "source": "fred",
+      "symbol": "DGS10"
+    },
+    "treasury_2y": {
+      "columns": [
+        "observation_date",
+        "DGS2"
+      ],
+      "file": "data\\raw\\treasury_2y_fred.csv",
+      "max_date": "2026-08-25",
+      "min_date": "2018-01-01",
+      "rows": 2257,
+      "source": "fred",
+      "symbol": "DGS2"
+    },
+    "vix": {
+      "columns": [
+        "Date",
+        "Open",
+        "High",
+        "Low",
+        "Close",
+        "Volume"
+      ],
+      "file": "data\\raw\\vix_yahoo.csv",
+      "max_date": "2026-08-26",
+      "min_date": "2018-01-02",
+      "rows": 2175,
+      "source": "yahoo",
+      "symbol": "^VIX"
+    }
+  },
+  "start_date": "2018-01-01"
+}

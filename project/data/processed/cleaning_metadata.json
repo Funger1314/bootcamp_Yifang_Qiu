@@ -1,0 +1,41 @@
+{
+  "cleaning_assumptions": [
+    "S&P 500 trading dates define the analysis calendar.",
+    "Treasury yields are forward-filled across market dates after publication gaps.",
+    "Extreme returns and volatility spikes are retained because they are risk-relevant."
+  ],
+  "columns": [
+    "date",
+    "sp500_open",
+    "sp500_high",
+    "sp500_low",
+    "sp500_close",
+    "sp500_volume",
+    "vix_close",
+    "treasury_10y",
+    "treasury_2y",
+    "sp500_return",
+    "vix_change",
+    "vix_pct_change",
+    "yield_spread_10y_2y"
+  ],
+  "file": "data/processed/market_data_cleaned.csv",
+  "max_date": "2026-08-26",
+  "min_date": "2018-01-03",
+  "missing_counts": {
+    "date": 0,
+    "sp500_close": 0,
+    "sp500_high": 0,
+    "sp500_low": 0,
+    "sp500_open": 0,
+    "sp500_return": 0,
+    "sp500_volume": 0,
+    "treasury_10y": 0,
+    "treasury_2y": 0,
+    "vix_change": 0,
+    "vix_close": 0,
+    "vix_pct_change": 0,
+    "yield_spread_10y_2y": 0
+  },
+  "rows": 2173
+}

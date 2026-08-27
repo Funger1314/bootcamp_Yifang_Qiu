@@ -26,4 +26,8 @@ A risk analyst will refresh the workflow after each trading day closes. The port
 
 ## Deliverable
 
-The stakeholder will receive a reproducible modeling notebook, a machine-readable forecast file at `data/processed/volatility_forecasts.csv`, and a concise risk report at `reports/volatility_risk_report.html`.
+The stakeholder will receive a reproducible modeling notebook, a machine-readable forecast file at `data/processed/volatility_forecasts.csv`, and a concise risk report at `reports/volatility_risk_report.md`.
+
+## Final Result
+
+The completed final project uses a time-aware modeling workflow: Linear Regression, Ridge, and Random Forest are compared only inside the development period with `TimeSeriesSplit(gap=5)`, and the final chronological test period is reserved for one held-out evaluation of the selected model. A five-row purge gap prevents overlapping forward target windows from leaking validation/test-period returns into training labels. In the current run, Random Forest is selected by validation. On the final test period it improves MAE by about 7.5% versus the naive last-observed-volatility baseline, but it does not improve RMSE. This mixed result is documented transparently: the model can support risk monitoring, but the stakeholder should continue comparing it with the naive benchmark and should not treat it as an automated trading or causal decision system.

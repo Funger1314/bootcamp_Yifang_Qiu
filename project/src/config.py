@@ -45,16 +45,30 @@ DATA_DIR = get_project_path("DATA_DIR", "data")
 RAW_DATA_DIR = get_project_path("RAW_DATA_DIR", "data/raw")
 PROCESSED_DATA_DIR = get_project_path("PROCESSED_DATA_DIR", "data/processed")
 REPORTS_DIR = get_project_path("REPORTS_DIR", "reports")
+MODEL_DIR = get_project_path("MODEL_DIR", "model")
+DOCS_DIR = get_project_path("DOCS_DIR", "docs")
+
+DEFAULT_START_DATE = get_config("START_DATE", "2018-01-01") or "2018-01-01"
+DEFAULT_END_DATE = get_config("END_DATE", "") or ""
 
 
 def masked_config_status() -> dict[str, str]:
     """Return non-sensitive configuration diagnostics for setup checks."""
 
+    def _display_path(path: Path) -> str:
+        try:
+            relative = path.resolve().relative_to(PROJECT_ROOT)
+        except ValueError:
+            return path.name
+        return "." if str(relative) == "." else relative.as_posix()
+
     return {
-        "project_root": str(PROJECT_ROOT),
-        "data_dir": str(DATA_DIR),
-        "raw_data_dir": str(RAW_DATA_DIR),
-        "processed_data_dir": str(PROCESSED_DATA_DIR),
-        "reports_dir": str(REPORTS_DIR),
+        "project_root": _display_path(PROJECT_ROOT),
+        "data_dir": _display_path(DATA_DIR),
+        "raw_data_dir": _display_path(RAW_DATA_DIR),
+        "processed_data_dir": _display_path(PROCESSED_DATA_DIR),
+        "reports_dir": _display_path(REPORTS_DIR),
+        "model_dir": _display_path(MODEL_DIR),
+        "docs_dir": _display_path(DOCS_DIR),
         "env_file_present": str(ENV_FILE.exists()),
     }

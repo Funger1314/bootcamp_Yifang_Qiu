@@ -1,0 +1,84 @@
+{
+  "development_end": "2024-11-20",
+  "development_rows": 1713,
+  "development_start": "2018-02-01",
+  "feature_columns": [
+    "sp500_return_lag_1",
+    "sp500_return_lag_3",
+    "sp500_return_rolling_mean_5",
+    "realized_volatility_5d",
+    "realized_volatility_10d",
+    "realized_volatility_21d",
+    "vix_close",
+    "vix_change",
+    "vix_pct_change",
+    "treasury_10y",
+    "treasury_2y",
+    "yield_spread_10y_2y",
+    "yield_spread_change_5d",
+    "vix_x_realized_vol_5d"
+  ],
+  "final_test_end": "2026-08-19",
+  "final_test_metrics": [
+    {
+      "MAE": 0.0038548789743183425,
+      "MAE_improvement_vs_naive": 0.0,
+      "R2": -0.175609827130895,
+      "RMSE": 0.0063417627376447195,
+      "RMSE_improvement_vs_naive": 0.0,
+      "model": "naive_last_5d_realized_vol",
+      "role": "external_benchmark"
+    },
+    {
+      "MAE": 0.0035662288333449975,
+      "MAE_improvement_vs_naive": 0.07487917075902156,
+      "R2": -0.26213283135335064,
+      "RMSE": 0.006570991690578831,
+      "RMSE_improvement_vs_naive": -0.0361459364560279,
+      "model": "random_forest",
+      "role": "selected_by_development_validation"
+    }
+  ],
+  "final_test_rows": 430,
+  "final_test_start": "2024-11-29",
+  "model_name": "random_forest",
+  "purge_gap_rows": 5,
+  "purged_gap_end": "2024-11-27",
+  "purged_gap_rows": 5,
+  "purged_gap_start": "2024-11-21",
+  "selection_method": "TimeSeriesSplit validation inside the development period only with a five-row purge gap",
+  "target_column": "future_5d_realized_volatility",
+  "target_horizon_rows": 5,
+  "validation_metrics": [
+    {
+      "folds": 5,
+      "model": "random_forest",
+      "selection_rank": 1,
+      "validation_MAE": 0.004476904628665077,
+      "validation_MAE_std": 0.0019108629244333182,
+      "validation_R2": -0.2194566606117776,
+      "validation_RMSE": 0.006296822547094745,
+      "validation_RMSE_std": 0.00355110038132925
+    },
+    {
+      "folds": 5,
+      "model": "ridge",
+      "selection_rank": 2,
+      "validation_MAE": 0.00571812215190762,
+      "validation_MAE_std": 0.003873764697152013,
+      "validation_R2": -0.9733017902973649,
+      "validation_RMSE": 0.009237808789357876,
+      "validation_RMSE_std": 0.00915798953881108
+    },
+    {
+      "folds": 5,
+      "model": "linear_regression",
+      "selection_rank": 3,
+      "validation_MAE": 0.0060626959431460325,
+      "validation_MAE_std": 0.004424681098163485,
+      "validation_R2": -1.3109492719903888,
+      "validation_RMSE": 0.010319774542391092,
+      "validation_RMSE_std": 0.011331759502460084
+    }
+  ]
+}

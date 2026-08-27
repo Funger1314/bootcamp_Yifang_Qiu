@@ -1,0 +1,16 @@
+feature,rationale,leakage_boundary
+sp500_return_lag_1,Captures very recent market direction known at date t.,Uses only information observable at or before prediction date t.
+sp500_return_lag_3,Adds short-memory return behavior without using future returns.,Uses only information observable at or before prediction date t.
+sp500_return_rolling_mean_5,Smooths noisy recent returns into a five-day directional signal.,Uses only information observable at or before prediction date t.
+realized_volatility_5d,Naive volatility persistence benchmark and core risk state variable.,Uses only information observable at or before prediction date t.
+realized_volatility_10d,Captures slightly slower volatility clustering.,Uses only information observable at or before prediction date t.
+realized_volatility_21d,Approximates one trading month of recent volatility.,Uses only information observable at or before prediction date t.
+vix_close,Market-implied stress indicator observable at date t.,Uses only information observable at or before prediction date t.
+vix_change,Recent change in market-implied stress.,Uses only information observable at or before prediction date t.
+vix_pct_change,Scale-adjusted change in market-implied stress.,Uses only information observable at or before prediction date t.
+treasury_10y,Long-rate level as macro/discount-rate context.,Uses only information observable at or before prediction date t.
+treasury_2y,Short-rate/policy-sensitive yield context.,Uses only information observable at or before prediction date t.
+yield_spread_10y_2y,"Term-structure slope, a macro stress and cycle proxy.",Uses only information observable at or before prediction date t.
+yield_spread_change_5d,Recent movement in the term-structure slope.,Uses only information observable at or before prediction date t.
+vix_x_realized_vol_5d,Interaction between implied and realized volatility regimes.,Uses only information observable at or before prediction date t.
+future_5d_realized_volatility,Continuous target: realized S&P 500 volatility over the next five trading days.,Computed from t+1 through t+5 and never used as an input feature.

@@ -1,0 +1,4 @@
+flag,flagged_rows,flagged_share,target_mean_all_rows,target_mean_flagged_rows,target_mean_unflagged_rows,treatment_decision
+sp500_return_iqr_outlier,27,0.012569832402234637,0.00856968436335331,0.03754861144099756,0.008200787130398858,retain and flag for sensitivity/regime analysis
+realized_volatility_iqr_outlier,42,0.019553072625698324,0.00856968436335331,0.03706209848526,0.008001459580295344,retain and flag for sensitivity/regime analysis
+large_abs_return_flag,109,0.05074487895716946,0.00856968436335331,0.020485505424303194,0.007932693438564915,retain and flag for sensitivity/regime analysis

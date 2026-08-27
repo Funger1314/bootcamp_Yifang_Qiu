@@ -1,0 +1,3 @@
+model,role,MAE,RMSE,R2,MAE_improvement_vs_naive,RMSE_improvement_vs_naive
+naive_last_5d_realized_vol,external_benchmark,0.0038548789743183425,0.0063417627376447195,-0.175609827130895,0.0,0.0
+random_forest,selected_by_development_validation,0.0035662288333449975,0.006570991690578831,-0.26213283135335064,0.07487917075902156,-0.0361459364560279

@@ -9,3 +9,7 @@ pyarrow
 seaborn
 scikit-learn
 scipy
+joblib
+flask
+nbformat
+nbclient
