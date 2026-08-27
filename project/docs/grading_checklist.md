@@ -11,7 +11,7 @@
 | 07 | Reusable outlier logic and assumption documentation | `src/outliers.py`, `data/processed/outlier_sensitivity_summary.csv` | Stress/outlier flags are retained for risk review rather than deleted | PASS |
 | 08 | Dedicated EDA evidence with statistics and visuals | `notebooks/eda_summary.ipynb`, `src/eda.py`, `reports/tables/eda_*.csv`, `reports/figures/eda_*.png` | Executed EDA notebook shows structure, date range, missingness, summary statistics, VIX/future-vol chart, correlations, and stress observations | PASS |
 | 09 | Engineered features, rationale, pipeline import | `src/features.py`, `data/processed/feature_registry.csv`, `data/processed/model_ready_volatility.csv` | Lag, rolling, VIX, yield, spread, and interaction features have rationales and leakage boundaries | PASS |
-| 10a | Regression modeling, diagnostics, assumptions, metrics | `src/modeling.py`, `reports/tables/model_validation_metrics.csv`, `reports/tables/model_test_metrics.csv`, `reports/figures/residual_diagnostics.png` | TimeSeriesSplit model selection occurs only in development data; final untouched test evaluates selected `random_forest` once against naive | PASS |
+| 10a | Regression modeling, diagnostics, assumptions, metrics | `src/modeling.py`, `reports/tables/model_validation_metrics.csv`, `reports/tables/model_test_metrics.csv`, `reports/figures/residual_diagnostics.png` | TimeSeriesSplit model selection occurs only in development data with `gap=5`; final split purges rows 2024-11-21 through 2024-11-27 before selected `random_forest` is evaluated once against naive | PASS |
 | 10a | Coefficient interpretation for linear regression track | `reports/tables/linear_coefficients.csv`, `reports/figures/linear_coefficients.png`, `notebooks/modeling_evaluation_summary.ipynb` | Standardized Linear/Ridge coefficients are ranked and interpreted as predictive associations, not causal effects | PASS |
 | 10b | Appropriate modeling track or time-series/classification alternative | `src/modeling.py`, `src/features.py` | Regression is appropriate for continuous volatility target; time ordering is respected with lag/rolling features and chronological splits | PASS |
 | 11 | Metrics, uncertainty, two assumption scenarios, risks | `src/evaluation.py`, `reports/tables/bootstrap_mae_ci.csv`, `reports/tables/assumption_sensitivity.csv`, `reports/tables/regime_subgroup_metrics.csv` | Bootstrap CI, no-Treasury scenario, shorter-history scenario, and separate high-VIX/high-volatility subgroup diagnostics | PASS |
@@ -23,7 +23,7 @@
 
 ## Honest model-performance note
 
-The project requirements are directly evidenced, but the corrected methodology changes the performance story. `random_forest` is selected by development-period validation, and final-test MAE improves by 8.4%. Final-test RMSE does **not** improve versus naive (-3.4%). This is documented in `README.md`, `reports/volatility_risk_report.md`, and `docs/project_summary.md` instead of being hidden.
+The project requirements are directly evidenced, but the corrected methodology changes the performance story. `random_forest` is selected by development-period validation with a five-row purge gap, and final-test MAE improves by 7.5%. A five-row purge gap prevents overlapping forward target windows from leaking validation/test-period returns into training labels. Final-test RMSE does **not** improve versus naive (-3.6%). This is documented in `README.md`, `reports/volatility_risk_report.md`, and `docs/project_summary.md` instead of being hidden.
 
 ## Latest QA evidence to refresh before submission
 

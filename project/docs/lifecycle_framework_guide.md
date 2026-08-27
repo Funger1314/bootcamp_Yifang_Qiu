@@ -11,7 +11,7 @@
 | 07 | Outlier analysis | Flagged stress observations and summarized sensitivity | `src/outliers.py`, `outlier_sensitivity_summary.csv` | Do not delete volatility spikes blindly |
 | 08 | EDA | Created a dedicated executed EDA notebook plus statistics and charts | `notebooks/eda_summary.ipynb`, `src/eda.py`, `reports/figures/eda_*.png` | VIX and realized volatility are central risk-state variables |
 | 09 | Feature engineering | Created leakage-safe lag, rolling, VIX, yield, and interaction features | `src/features.py`, `model_ready_volatility.csv` | Predictors use only information available at date t |
-| 10 | Modeling | Used TimeSeriesSplit in development data, then one final test evaluation | `src/modeling.py`, `model/model.pkl` | `random_forest` was selected by validation, not by final test |
+| 10 | Modeling | Used TimeSeriesSplit with a five-row gap in development data, then one final test evaluation after a final split purge | `src/modeling.py`, `model/model.pkl` | `random_forest` was selected by purged validation, not by final test |
 | 11 | Evaluation and risk communication | Added bootstrap uncertainty, assumption sensitivity, and subgroup diagnostics | `src/evaluation.py`, `reports/tables/*.csv` | Assumption scenarios are separate from market-regime slices |
 | 12 | Results reporting | Wrote stakeholder-ready risk report with charts and implications | `reports/volatility_risk_report.md` | Communicate both usefulness and benchmark limitations |
 | 13 | Productization | Packaged the saved model behind a Flask API | `app.py`, `model/model.pkl` | Load the model once at startup and validate inputs |

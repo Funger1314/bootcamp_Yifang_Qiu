@@ -4,9 +4,10 @@ Audience: Portfolio manager / risk manager
 
 ## Executive Summary
 
-- The selected model is **random_forest**, chosen using time-aware validation inside the development period only.
+- The selected model is **random_forest**, chosen using time-aware validation inside the development period only with a five-row purge gap.
 - The final test period is kept untouched for model selection. It is used once to compare the selected model with the naive last-observed-volatility benchmark.
-- Final-test MAE improvement versus naive is **8.4%** and RMSE improvement is **-3.4%**.
+- A five-row purge gap prevents overlapping forward target windows from leaking validation/test-period returns into training labels.
+- Final-test MAE improvement versus naive is **7.5%** and RMSE improvement is **-3.6%**.
 - The tool is useful as a risk-monitoring aid, not an automated trading system. Elevated forecasts should trigger human review.
 
 ## Key Charts
@@ -17,7 +18,7 @@ This chart compares realized future five-day volatility with the model forecast 
 
 ![Model validation comparison](figures/model_validation_comparison.png)
 
-This chart shows the development-period validation evidence used to choose the model. It is separate from the final test evidence so that the held-out test period is not used for model selection.
+This chart shows the development-period validation evidence used to choose the model. Each validation fold uses a five-row gap, and the final development/test boundary also purges five rows before the final test start.
 
 ![Assumption sensitivity](figures/assumption_sensitivity.png)
 
@@ -29,16 +30,18 @@ Development-period validation metrics:
 
 | model | validation_MAE | validation_RMSE | validation_R2 | validation_MAE_std | validation_RMSE_std | folds | selection_rank |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| random_forest | 0.004317 | 0.006086 | -0.083486 | 0.001677 | 0.003499 | 5 | 1 |
-| ridge | 0.005326 | 0.008896 | -0.769791 | 0.003429 | 0.008921 | 5 | 2 |
-| linear_regression | 0.005644 | 0.009916 | -1.068475 | 0.003977 | 0.011027 | 5 | 3 |
+| random_forest | 0.004477 | 0.006297 | -0.219457 | 0.001911 | 0.003551 | 5 | 1 |
+| ridge | 0.005718 | 0.009238 | -0.973302 | 0.003874 | 0.009158 | 5 | 2 |
+| linear_regression | 0.006063 | 0.010320 | -1.310949 | 0.004425 | 0.011332 | 5 | 3 |
 
 Final untouched test metrics:
 
 | model | role | MAE | RMSE | R2 | MAE_improvement_vs_naive | RMSE_improvement_vs_naive |
 | --- | --- | --- | --- | --- | --- | --- |
 | naive_last_5d_realized_vol | external_benchmark | 0.003855 | 0.006342 | -0.175610 | 0.0% | 0.0% |
-| random_forest | selected_by_development_validation | 0.003532 | 0.006555 | -0.255827 | 8.4% | -3.4% |
+| random_forest | selected_by_development_validation | 0.003566 | 0.006571 | -0.262133 | 7.5% | -3.6% |
+
+Final split leakage control: the target uses returns from t+1 through t+5, so the workflow removes the five rows immediately before the final test period from development training. This keeps the intended final-test start date while preventing development labels from using final-test-period returns.
 
 ## Assumption Sensitivity
 
@@ -46,11 +49,11 @@ The baseline scenario uses the selected model, the full approved feature set, an
 
 | scenario | model | feature_count | train_rows | test_rows | test_start | test_end | MAE | RMSE | bias | delta_MAE_vs_baseline | delta_RMSE_vs_baseline | interpretation |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Baseline: selected model, full feature set, full development history | random_forest | 14 | 1718 | 430 | 2024-11-29 | 2026-08-19 | 0.003532 | 0.006555 | -0.000973 | 0.000000 | 0.000000 | Prediction holds if all approved market, volatility, VIX, and Treasury inputs remain available. |
-| No Treasury/yield information | random_forest | 10 | 1718 | 430 | 2024-11-29 | 2026-08-19 | 0.003265 | 0.006449 | -0.000365 | -0.000267 | -0.000105 | Tests sensitivity to losing interest-rate levels and yield-spread information. |
-| Shorter training history: 2020 onward | random_forest | 14 | 1236 | 430 | 2024-11-29 | 2026-08-19 | 0.003413 | 0.006513 | -0.000573 | -0.000119 | -0.000042 | Tests whether older market regimes are helping or hurting final-test performance. |
+| Baseline: selected model, full feature set, full development history | random_forest | 14 | 1713 | 430 | 2024-11-29 | 2026-08-19 | 0.003566 | 0.006571 | -0.001063 | 0.000000 | 0.000000 | Prediction holds if all approved market, volatility, VIX, and Treasury inputs remain available. |
+| No Treasury/yield information | random_forest | 10 | 1713 | 430 | 2024-11-29 | 2026-08-19 | 0.003271 | 0.006459 | -0.000381 | -0.000295 | -0.000112 | Tests sensitivity to losing interest-rate levels and yield-spread information. |
+| Shorter training history: 2020 onward | random_forest | 14 | 1231 | 430 | 2024-11-29 | 2026-08-19 | 0.003410 | 0.006496 | -0.000587 | -0.000157 | -0.000075 | Tests whether older market regimes are helping or hurting final-test performance. |
 
-Prediction holds if the public market, VIX, and Treasury inputs remain available and the future market regime resembles the development data closely enough. In this run, neither alternative assumption worsens MAE relative to the baseline. That suggests the final-test result is not highly dependent on Treasury/yield features or older pre-2020 training rows, although this should be monitored rather than treated as a permanent economic rule. The model is relatively stable to an assumption when its MAE/RMSE deltas remain small relative to baseline MAE **0.003532**.
+Prediction holds if the public market, VIX, and Treasury inputs remain available and the future market regime resembles the development data closely enough. In this run, neither alternative assumption worsens MAE relative to the baseline. That suggests the final-test result is not highly dependent on Treasury/yield features or older pre-2020 training rows, although this should be monitored rather than treated as a permanent economic rule. The model is relatively stable to an assumption when its MAE/RMSE deltas remain small relative to baseline MAE **0.003566**.
 
 ## Regime / Subgroup Diagnostics
 
@@ -58,16 +61,16 @@ The following diagnostics ask where the model performs better or worse. They are
 
 | subgroup | n | selected_MAE | selected_RMSE | selected_bias | naive_MAE | MAE_improvement_vs_naive |
 | --- | --- | --- | --- | --- | --- | --- |
-| All final-test observations | 430 | 0.003532 | 0.006555 | -0.000973 | 0.003855 | 8.4% |
-| Low/normal VIX regime | 366 | 0.002678 | 0.004212 | -0.000442 | 0.003308 | 19.1% |
-| High VIX regime | 64 | 0.008419 | 0.013682 | -0.004008 | 0.006982 | -20.6% |
-| High realized-volatility regime | 85 | 0.006619 | 0.011982 | -0.002618 | 0.007612 | 13.0% |
+| All final-test observations | 430 | 0.003566 | 0.006571 | -0.001063 | 0.003855 | 7.5% |
+| Low/normal VIX regime | 366 | 0.002715 | 0.004224 | -0.000545 | 0.003308 | 17.9% |
+| High VIX regime | 64 | 0.008437 | 0.013714 | -0.004024 | 0.006982 | -20.8% |
+| High realized-volatility regime | 85 | 0.006646 | 0.012012 | -0.002659 | 0.007612 | 12.7% |
 
 Risk increases when VIX or recent realized volatility is elevated, so the high-stress rows deserve separate review even when average test error is acceptable.
 
 ## Bootstrap Uncertainty
 
-Bootstrap selected-model MAE estimate: **0.003532**, 95% CI **[0.003020, 0.004048]** using 1,000 resamples of final-test residual errors.
+Bootstrap selected-model MAE estimate: **0.003566**, 95% CI **[0.003049, 0.004082]** using 1,000 resamples of final-test residual errors.
 
 This interval is useful for communicating uncertainty, but it should be read cautiously because a simple row bootstrap does not fully preserve time-series dependence in daily financial data.
 

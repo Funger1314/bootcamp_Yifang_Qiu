@@ -6,7 +6,7 @@ Author: Yifang Qiu
 
 This project predicts future 5-trading-day realized S&P 500 volatility using market stress and interest-rate indicators. The primary stakeholder is a portfolio manager or risk manager who needs an interpretable daily risk-monitoring signal, not an automated trading rule.
 
-The final pipeline downloads public market data, stores raw and processed artifacts, cleans and aligns the series, flags risk-relevant outliers, builds leakage-safe features, trains regression models with time-aware validation, evaluates model risk on an untouched final test period, and packages the result as a stakeholder report and Flask prediction API.
+The final pipeline downloads public market data, stores raw and processed artifacts, cleans and aligns the series, flags risk-relevant outliers, builds leakage-safe features, trains regression models with time-aware validation and a five-row purge gap, evaluates model risk on an untouched final test period, and packages the result as a stakeholder report and Flask prediction API.
 
 ## Stakeholder and decision
 
@@ -19,7 +19,7 @@ The decision owner is a portfolio risk manager. A risk analyst can run the pipel
 - 10-year Treasury yield from FRED (`DGS10`)
 - 2-year Treasury yield from FRED (`DGS2`)
 
-The committed raw-data manifest is `data/raw/raw_data_manifest.json`. The default reproducible sample starts on `2018-01-01` and currently contains 2,148 model-ready rows after alignment and leakage-safe feature construction.
+The committed raw-data manifest is `data/raw/raw_data_manifest.json`. The default reproducible sample starts on `2018-01-01` and currently contains 2,143 model-ready rows after alignment and leakage-safe feature construction.
 
 ## Data Storage
 
@@ -41,7 +41,9 @@ Feature definitions and rationales are saved in `data/processed/feature_registry
 
 ## Modeling methodology
 
-The project uses regression because the target is continuous future volatility. The split is chronological, not random. Approximately the final 20% of observations are reserved as the final untouched test period from 2024-11-29 through 2026-08-19. Model selection happens only inside the development period from 2018-02-01 through 2024-11-27 using `TimeSeriesSplit`.
+The project uses regression because the target is continuous future volatility. The split is chronological, not random. Approximately the final 20% of observations are reserved as the final untouched test period from 2024-11-29 through 2026-08-19. Model selection happens only inside the development period from 2018-02-01 through 2024-11-20 using `TimeSeriesSplit(gap=5)`. A five-row purge gap prevents overlapping forward target windows from leaking validation/test-period returns into training labels.
+
+At the final split boundary, the intended test start region is preserved, but the five rows from 2024-11-21 through 2024-11-27 are removed from development training. As a result, development ends on 2024-11-20 and final testing begins on 2024-11-29.
 
 Candidate models are Linear Regression, Ridge, and Random Forest. The naive last-5-day realized-volatility model is kept as an external benchmark on the final test period.
 
@@ -49,22 +51,22 @@ Development-period validation:
 
 | model | validation_MAE | validation_RMSE | validation_R2 | validation_MAE_std | validation_RMSE_std | folds | selection_rank |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| random_forest | 0.004317 | 0.006086 | -0.083486 | 0.001677 | 0.003499 | 5 | 1 |
-| ridge | 0.005326 | 0.008896 | -0.769791 | 0.003429 | 0.008921 | 5 | 2 |
-| linear_regression | 0.005644 | 0.009916 | -1.068475 | 0.003977 | 0.011027 | 5 | 3 |
+| random_forest | 0.004477 | 0.006297 | -0.219457 | 0.001911 | 0.003551 | 5 | 1 |
+| ridge | 0.005718 | 0.009238 | -0.973302 | 0.003874 | 0.009158 | 5 | 2 |
+| linear_regression | 0.006063 | 0.010320 | -1.310949 | 0.004425 | 0.011332 | 5 | 3 |
 
 ## Final test results
 
-The selected model is `random_forest` because it ranked first on development-period validation MAE. It is then refit on the full development period and evaluated once on the untouched final test period.
+The selected model is `random_forest` because it ranked first on purged development-period validation MAE. It is then refit on the full purged development period and evaluated once on the untouched final test period.
 
 | model | role | MAE | RMSE | R2 | MAE_improvement_vs_naive | RMSE_improvement_vs_naive |
 | --- | --- | --- | --- | --- | --- | --- |
 | naive_last_5d_realized_vol | external_benchmark | 0.003855 | 0.006342 | -0.175610 | 0.0% | 0.0% |
-| random_forest | selected_by_development_validation | 0.003532 | 0.006555 | -0.255827 | 8.4% | -3.4% |
+| random_forest | selected_by_development_validation | 0.003566 | 0.006571 | -0.262133 | 7.5% | -3.6% |
 
-The selected model improves final-test MAE by 8.4% versus naive. It does not improve final-test RMSE (-3.4%), which is an important limitation: the model lowers average absolute error but has larger squared-error exposure during some difficult periods.
+The selected model improves final-test MAE by 7.5% versus naive. It does not improve final-test RMSE (-3.6%), which is an important limitation: the model lowers average absolute error but has larger squared-error exposure during some difficult periods.
 
-Bootstrap selected-model MAE: 0.003532, 95% CI [0.003020, 0.004048] using 1,000 bootstrap resamples of final-test residual errors. A row bootstrap is used for course-scope simplicity; the limitation is that daily financial residuals can be serially dependent.
+Bootstrap selected-model MAE: 0.003566, 95% CI [0.003049, 0.004082] using 1,000 bootstrap resamples of final-test residual errors. A row bootstrap is used for course-scope simplicity; the limitation is that daily financial residuals can be serially dependent.
 
 ## Assumption sensitivity
 
@@ -72,9 +74,9 @@ Stage 11 assumption sensitivity is separated from market-regime diagnostics. The
 
 | scenario | model | feature_count | train_rows | test_rows | test_start | test_end | MAE | RMSE | bias | delta_MAE_vs_baseline | delta_RMSE_vs_baseline | interpretation |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Baseline: selected model, full feature set, full development history | random_forest | 14 | 1718 | 430 | 2024-11-29 | 2026-08-19 | 0.003532 | 0.006555 | -0.000973 | 0.000000 | 0.000000 | Prediction holds if all approved market, volatility, VIX, and Treasury inputs remain available. |
-| No Treasury/yield information | random_forest | 10 | 1718 | 430 | 2024-11-29 | 2026-08-19 | 0.003265 | 0.006449 | -0.000365 | -0.000267 | -0.000105 | Tests sensitivity to losing interest-rate levels and yield-spread information. |
-| Shorter training history: 2020 onward | random_forest | 14 | 1236 | 430 | 2024-11-29 | 2026-08-19 | 0.003413 | 0.006513 | -0.000573 | -0.000119 | -0.000042 | Tests whether older market regimes are helping or hurting final-test performance. |
+| Baseline: selected model, full feature set, full development history | random_forest | 14 | 1713 | 430 | 2024-11-29 | 2026-08-19 | 0.003566 | 0.006571 | -0.001063 | 0.000000 | 0.000000 | Prediction holds if all approved market, volatility, VIX, and Treasury inputs remain available. |
+| No Treasury/yield information | random_forest | 10 | 1713 | 430 | 2024-11-29 | 2026-08-19 | 0.003271 | 0.006459 | -0.000381 | -0.000295 | -0.000112 | Tests sensitivity to losing interest-rate levels and yield-spread information. |
+| Shorter training history: 2020 onward | random_forest | 14 | 1231 | 430 | 2024-11-29 | 2026-08-19 | 0.003410 | 0.006496 | -0.000587 | -0.000157 | -0.000075 | Tests whether older market regimes are helping or hurting final-test performance. |
 
 ## Important limitations
 

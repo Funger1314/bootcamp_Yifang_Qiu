@@ -10,7 +10,7 @@ The primary stakeholder is a portfolio manager or risk manager. A risk analyst o
 
 ## Key findings
 
-The corrected time-aware validation workflow selects `random_forest`. On the final untouched test period, the selected model has MAE 0.003532 and RMSE 0.006555. The naive benchmark has MAE 0.003855 and RMSE 0.006342. The selected model improves MAE by 8.4%, but it does not improve RMSE, so large-error risk remains important.
+The corrected time-aware validation workflow selects `random_forest` after applying `TimeSeriesSplit(gap=5)`. On the final untouched test period, the selected model has MAE 0.003566 and RMSE 0.006571. The naive benchmark has MAE 0.003855 and RMSE 0.006342. The selected model improves MAE by 7.5%, but it does not improve RMSE, so large-error risk remains important.
 
 ## Recommendation
 
@@ -18,7 +18,7 @@ Use the forecast as an early-warning input in daily or weekly risk review. Escal
 
 ## Important assumptions
 
-Inputs are daily close-based market indicators available at prediction time. Treasury gaps are forward-filled after market-date alignment. The final test period is not used for model selection.
+Inputs are daily close-based market indicators available at prediction time. Treasury gaps are forward-filled after market-date alignment. The final test period is not used for model selection. A five-row purge gap prevents overlapping forward target windows from leaking validation/test-period returns into training labels.
 
 ## Limitations and risks
 

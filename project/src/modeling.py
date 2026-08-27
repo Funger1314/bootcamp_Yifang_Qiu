@@ -2,8 +2,10 @@
 
 The modeling workflow deliberately separates model selection from final
 evaluation. Candidate models are compared only inside the development period
-using time-aware cross-validation. The final chronological test period remains
-untouched until the selected model is refit on all development data.
+using time-aware cross-validation with a five-row gap. The final chronological
+test period remains untouched until the selected model is refit on all
+development data. A five-row purge gap prevents overlapping forward target
+windows from leaking validation/test-period returns into training labels.
 """
 
 from __future__ import annotations
@@ -34,18 +36,37 @@ from src.utils import write_json
 
 
 NAIVE_MODEL_NAME = "naive_last_5d_realized_vol"
+TARGET_HORIZON_ROWS = 5
+PURGE_GAP_ROWS = 5
 
 
-def chronological_train_test_split(dataframe: pd.DataFrame, test_size: float = 0.2) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Split time-series rows chronologically without shuffling."""
+def chronological_train_test_split(
+    dataframe: pd.DataFrame,
+    test_size: float = 0.2,
+    purge_gap_rows: int = PURGE_GAP_ROWS,
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    """Split time-series rows chronologically with a purge gap before test.
+
+    The target uses returns from t+1 through t+5. Purging the five rows
+    immediately before the final test start prevents development labels from
+    using any return belonging to the final-test period.
+    """
 
     if not 0 < test_size < 1:
         raise ValueError("test_size must be between zero and one")
+    if purge_gap_rows < 0:
+        raise ValueError("purge_gap_rows must be non-negative")
     data = dataframe.sort_values("date").reset_index(drop=True)
     split_index = int(len(data) * (1 - test_size))
     if split_index <= 0 or split_index >= len(data):
         raise ValueError("Invalid split produced an empty development or test set")
-    return data.iloc[:split_index].copy(), data.iloc[split_index:].copy()
+    development_end_index = split_index - purge_gap_rows
+    if development_end_index <= 0:
+        raise ValueError("Purge gap produced an empty development set")
+    development = data.iloc[:development_end_index].copy()
+    purged = data.iloc[development_end_index:split_index].copy()
+    test = data.iloc[split_index:].copy()
+    return development, test, purged
 
 
 def regression_pipeline(model) -> Pipeline:
@@ -108,13 +129,14 @@ def time_series_validation_metrics(
     development: pd.DataFrame,
     feature_columns: list[str],
     n_splits: int = 5,
+    gap_rows: int = PURGE_GAP_ROWS,
 ) -> tuple[pd.DataFrame, pd.DataFrame]:
-    """Compare candidate models inside the development period only."""
+    """Compare candidate models inside development with a time-series gap."""
 
-    if len(development) < n_splits + 2:
+    if len(development) < n_splits + gap_rows + 2:
         raise ValueError("Development set is too small for time-series validation")
 
-    splitter = TimeSeriesSplit(n_splits=n_splits)
+    splitter = TimeSeriesSplit(n_splits=n_splits, gap=gap_rows)
     fold_rows: list[dict] = []
     X_dev = development[feature_columns]
     y_dev = development[TARGET_COLUMN]
@@ -139,6 +161,7 @@ def time_series_validation_metrics(
                 "validation_start": str(fold_validation["date"].min().date()),
                 "validation_end": str(fold_validation["date"].max().date()),
                 "train_rows": int(len(fold_train)),
+                "gap_rows": int(gap_rows),
                 "validation_rows": int(len(fold_validation)),
                 **_metrics(y_validation, validation_pred),
             }
@@ -196,7 +219,7 @@ def train_and_evaluate_models(
     """Select a model by time-aware validation, then evaluate final test once."""
 
     feature_columns = feature_columns or BASE_FEATURES.copy()
-    development, test = chronological_train_test_split(model_ready)
+    development, test, purged_gap = chronological_train_test_split(model_ready)
     validation_metrics, validation_fold_metrics = time_series_validation_metrics(development, feature_columns)
     best_name = str(validation_metrics.iloc[0]["model"])
 
@@ -239,12 +262,17 @@ def train_and_evaluate_models(
     model_dir.mkdir(parents=True, exist_ok=True)
     model_bundle = {
         "model_name": best_name,
-        "selection_method": "TimeSeriesSplit validation inside the development period only",
+        "selection_method": "TimeSeriesSplit validation inside the development period only with a five-row purge gap",
+        "target_horizon_rows": TARGET_HORIZON_ROWS,
+        "purge_gap_rows": PURGE_GAP_ROWS,
         "pipeline": selected_model,
         "feature_columns": feature_columns,
         "target_column": TARGET_COLUMN,
         "development_start": str(development["date"].min().date()),
         "development_end": str(development["date"].max().date()),
+        "purged_gap_start": str(purged_gap["date"].min().date()) if not purged_gap.empty else None,
+        "purged_gap_end": str(purged_gap["date"].max().date()) if not purged_gap.empty else None,
+        "purged_gap_rows": int(len(purged_gap)),
         "final_test_start": str(test["date"].min().date()),
         "final_test_end": str(test["date"].max().date()),
         "development_rows": int(len(development)),
@@ -261,6 +289,7 @@ def train_and_evaluate_models(
 
     return {
         "development": development,
+        "purged_gap": purged_gap,
         "test": test,
         "feature_columns": feature_columns,
         "validation_metrics": validation_metrics,
@@ -323,7 +352,7 @@ def save_modeling_outputs(results: dict, reports_dir: Path = REPORTS_DIR) -> dic
         value_name="value",
     )
     sns.barplot(data=validation_plot, x="model", y="value", hue="metric", ax=ax)
-    ax.set_title("Development-period validation error used for model selection")
+    ax.set_title("Development validation error used for model selection (5-row gap)")
     ax.set_xlabel("")
     ax.tick_params(axis="x", rotation=25)
     outputs["model_validation_comparison"] = figures_dir / "model_validation_comparison.png"

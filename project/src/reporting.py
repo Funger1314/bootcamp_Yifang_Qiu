@@ -50,8 +50,9 @@ Audience: Portfolio manager / risk manager
 
 ## Executive Summary
 
-- The selected model is **{selected['model']}**, chosen using time-aware validation inside the development period only.
+- The selected model is **{selected['model']}**, chosen using time-aware validation inside the development period only with a five-row purge gap.
 - The final test period is kept untouched for model selection. It is used once to compare the selected model with the naive last-observed-volatility benchmark.
+- A five-row purge gap prevents overlapping forward target windows from leaking validation/test-period returns into training labels.
 - Final-test MAE improvement versus naive is **{selected['MAE_improvement_vs_naive']:.1%}** and RMSE improvement is **{selected['RMSE_improvement_vs_naive']:.1%}**.
 - The tool is useful as a risk-monitoring aid, not an automated trading system. Elevated forecasts should trigger human review.
 
@@ -63,7 +64,7 @@ This chart compares realized future five-day volatility with the model forecast 
 
 ![Model validation comparison](figures/model_validation_comparison.png)
 
-This chart shows the development-period validation evidence used to choose the model. It is separate from the final test evidence so that the held-out test period is not used for model selection.
+This chart shows the development-period validation evidence used to choose the model. Each validation fold uses a five-row gap, and the final development/test boundary also purges five rows before the final test start.
 
 ![Assumption sensitivity](figures/assumption_sensitivity.png)
 
@@ -78,6 +79,8 @@ Development-period validation metrics:
 Final untouched test metrics:
 
 {test_table}
+
+Final split leakage control: the target uses returns from t+1 through t+5, so the workflow removes the five rows immediately before the final test period from development training. This keeps the intended final-test start date while preventing development labels from using final-test-period returns.
 
 ## Assumption Sensitivity
 

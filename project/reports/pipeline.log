@@ -1,13 +1,13 @@
-2026-08-27 01:14:44,061 INFO Starting ingest step
-2026-08-27 01:14:44,953 INFO Finished ingest step; saved sources=['manifest', 'sp500', 'treasury_10y', 'treasury_2y', 'vix']
-2026-08-27 01:14:44,962 INFO Starting clean step
-2026-08-27 01:14:45,100 INFO Finished clean step with 2173 rows
-2026-08-27 01:14:45,103 INFO Starting features step
-2026-08-27 01:14:45,724 INFO Finished features step with 2148 model-ready rows
-2026-08-27 01:14:45,726 INFO Starting eda step
-2026-08-27 01:14:47,464 INFO Finished eda step
-2026-08-27 01:14:47,477 INFO Starting model step
-2026-08-27 01:14:55,728 INFO Finished model step with selected model=random_forest
-2026-08-27 01:14:55,732 INFO Starting evaluate step
-2026-08-27 01:15:06,331 INFO Finished evaluate step
-2026-08-27 01:15:06,341 INFO Pipeline complete
+2026-08-27 01:33:47,166 INFO Starting ingest step
+2026-08-27 01:33:48,111 INFO Finished ingest step; saved sources=['manifest', 'sp500', 'treasury_10y', 'treasury_2y', 'vix']
+2026-08-27 01:33:48,120 INFO Starting clean step
+2026-08-27 01:33:48,253 INFO Finished clean step with 2173 rows
+2026-08-27 01:33:48,255 INFO Starting features step
+2026-08-27 01:33:48,801 INFO Finished features step with 2148 model-ready rows
+2026-08-27 01:33:48,803 INFO Starting eda step
+2026-08-27 01:33:50,553 INFO Finished eda step
+2026-08-27 01:33:50,564 INFO Starting model step
+2026-08-27 01:33:58,752 INFO Finished model step with selected model=random_forest
+2026-08-27 01:33:58,756 INFO Starting evaluate step
+2026-08-27 01:34:09,600 INFO Finished evaluate step
+2026-08-27 01:34:09,615 INFO Pipeline complete
