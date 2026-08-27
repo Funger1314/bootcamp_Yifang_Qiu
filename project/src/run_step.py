@@ -111,10 +111,12 @@ def step_evaluate() -> dict[str, Path]:
     results = train_and_evaluate_models(model_ready)
     save_modeling_outputs(results)
     outputs = save_evaluation_outputs(results, model_ready)
-    metrics = pd.read_csv(REPORTS_DIR / "tables" / "model_metrics.csv")
-    scenario = pd.read_csv(REPORTS_DIR / "tables" / "scenario_metrics.csv")
+    validation = pd.read_csv(REPORTS_DIR / "tables" / "model_validation_metrics.csv")
+    test = pd.read_csv(REPORTS_DIR / "tables" / "model_test_metrics.csv")
+    assumption = pd.read_csv(REPORTS_DIR / "tables" / "assumption_sensitivity.csv")
+    regime = pd.read_csv(REPORTS_DIR / "tables" / "regime_subgroup_metrics.csv")
     ci = pd.read_csv(REPORTS_DIR / "tables" / "bootstrap_mae_ci.csv")
-    report_path = write_stakeholder_report(metrics, scenario, ci)
+    report_path = write_stakeholder_report(validation, test, assumption, regime, ci)
     outputs["stakeholder_report"] = report_path
     logging.info("Finished evaluate step")
     return outputs
