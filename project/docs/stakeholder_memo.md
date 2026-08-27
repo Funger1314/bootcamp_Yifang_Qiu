@@ -26,4 +26,8 @@ A risk analyst will refresh the workflow after each trading day closes. The port
 
 ## Deliverable
 
-The stakeholder will receive a reproducible modeling notebook, a machine-readable forecast file at `data/processed/volatility_forecasts.csv`, and a concise risk report at `reports/volatility_risk_report.html`.
+The stakeholder will receive a reproducible modeling notebook, a machine-readable forecast file at `data/processed/volatility_forecasts.csv`, and a concise risk report at `reports/volatility_risk_report.md`.
+
+## Final Result
+
+The completed final project uses a Ridge regression model selected on a chronological holdout period. It improves MAE by about 28.0% and RMSE by about 26.1% relative to a naive last-observed-volatility baseline. The model is strong enough to support a daily risk-monitoring workflow, but it should remain a human-reviewed decision-support signal rather than an automated trading system.
