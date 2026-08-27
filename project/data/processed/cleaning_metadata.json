@@ -19,7 +19,7 @@
     "vix_pct_change",
     "yield_spread_10y_2y"
   ],
-  "file": "C:\\Users\\yifunger\\Documents\\Codex\\2026-08-18\\new-chat\\work\\bootcamp_Yifang_Qiu\\project\\data\\processed\\market_data_cleaned.csv",
+  "file": "data/processed/market_data_cleaned.csv",
   "max_date": "2026-08-26",
   "min_date": "2018-01-03",
   "missing_counts": {

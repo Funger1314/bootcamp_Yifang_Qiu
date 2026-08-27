@@ -7,7 +7,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from src.config import PROCESSED_DATA_DIR, RAW_DATA_DIR
+from src.config import PROJECT_ROOT, PROCESSED_DATA_DIR, RAW_DATA_DIR
 from src.utils import assert_columns, write_json
 
 
@@ -96,8 +96,12 @@ def save_cleaned_dataset(
     processed_dir.mkdir(parents=True, exist_ok=True)
     output_path = processed_dir / filename
     data.to_csv(output_path, index=False)
+    try:
+        display_file = output_path.resolve().relative_to(PROJECT_ROOT).as_posix()
+    except ValueError:
+        display_file = output_path.name
     metadata = {
-        "file": str(output_path),
+        "file": display_file,
         "rows": int(len(data)),
         "columns": data.columns.tolist(),
         "min_date": str(data["date"].min().date()),

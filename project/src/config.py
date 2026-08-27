@@ -55,13 +55,20 @@ DEFAULT_END_DATE = get_config("END_DATE", "") or ""
 def masked_config_status() -> dict[str, str]:
     """Return non-sensitive configuration diagnostics for setup checks."""
 
+    def _display_path(path: Path) -> str:
+        try:
+            relative = path.resolve().relative_to(PROJECT_ROOT)
+        except ValueError:
+            return path.name
+        return "." if str(relative) == "." else relative.as_posix()
+
     return {
-        "project_root": str(PROJECT_ROOT),
-        "data_dir": str(DATA_DIR),
-        "raw_data_dir": str(RAW_DATA_DIR),
-        "processed_data_dir": str(PROCESSED_DATA_DIR),
-        "reports_dir": str(REPORTS_DIR),
-        "model_dir": str(MODEL_DIR),
-        "docs_dir": str(DOCS_DIR),
+        "project_root": _display_path(PROJECT_ROOT),
+        "data_dir": _display_path(DATA_DIR),
+        "raw_data_dir": _display_path(RAW_DATA_DIR),
+        "processed_data_dir": _display_path(PROCESSED_DATA_DIR),
+        "reports_dir": _display_path(REPORTS_DIR),
+        "model_dir": _display_path(MODEL_DIR),
+        "docs_dir": _display_path(DOCS_DIR),
         "env_file_present": str(ENV_FILE.exists()),
     }
