@@ -1,4 +1,7 @@
 {
+  "development_end": "2024-11-27",
+  "development_rows": 1718,
+  "development_start": "2018-02-01",
   "feature_columns": [
     "sp500_return_lag_1",
     "sp500_return_lag_3",
@@ -15,44 +18,62 @@
     "yield_spread_change_5d",
     "vix_x_realized_vol_5d"
   ],
-  "metrics": [
+  "final_test_end": "2026-08-19",
+  "final_test_metrics": [
     {
       "MAE": 0.0038548789743183425,
       "MAE_improvement_vs_naive": 0.0,
       "R2": -0.175609827130895,
       "RMSE": 0.0063417627376447195,
       "RMSE_improvement_vs_naive": 0.0,
-      "model": "naive_last_5d_realized_vol"
-    },
-    {
-      "MAE": 0.0027750629178757993,
-      "MAE_improvement_vs_naive": 0.28011672056020565,
-      "R2": 0.3575032218802251,
-      "RMSE": 0.004688283473454828,
-      "RMSE_improvement_vs_naive": 0.26072865425488634,
-      "model": "linear_regression"
-    },
-    {
-      "MAE": 0.002774270856295324,
-      "MAE_improvement_vs_naive": 0.28032219045582424,
-      "R2": 0.3576008686405133,
-      "RMSE": 0.004687927196891759,
-      "RMSE_improvement_vs_naive": 0.2607848336765721,
-      "model": "ridge"
+      "model": "naive_last_5d_realized_vol",
+      "role": "external_benchmark"
     },
     {
       "MAE": 0.0035320902342614374,
       "MAE_improvement_vs_naive": 0.08373511651270032,
-      "R2": -0.25582662681384116,
-      "RMSE": 0.0065545552635913554,
-      "RMSE_improvement_vs_naive": -0.03355416068839961,
-      "model": "random_forest"
+      "R2": -0.2558266268138405,
+      "RMSE": 0.006554555263591354,
+      "RMSE_improvement_vs_naive": -0.03355416068839933,
+      "model": "random_forest",
+      "role": "selected_by_development_validation"
     }
   ],
-  "model_name": "ridge",
+  "final_test_rows": 430,
+  "final_test_start": "2024-11-29",
+  "model_name": "random_forest",
+  "selection_method": "TimeSeriesSplit validation inside the development period only",
   "target_column": "future_5d_realized_volatility",
-  "test_end": "2026-08-19",
-  "test_start": "2024-11-29",
-  "train_end": "2024-11-27",
-  "train_start": "2018-02-01"
+  "validation_metrics": [
+    {
+      "folds": 5,
+      "model": "random_forest",
+      "selection_rank": 1,
+      "validation_MAE": 0.004317006989193231,
+      "validation_MAE_std": 0.0016772762072007935,
+      "validation_R2": -0.08348594737361459,
+      "validation_RMSE": 0.006085540235743397,
+      "validation_RMSE_std": 0.00349854308241343
+    },
+    {
+      "folds": 5,
+      "model": "ridge",
+      "selection_rank": 2,
+      "validation_MAE": 0.005325639464418725,
+      "validation_MAE_std": 0.0034285560623729147,
+      "validation_R2": -0.7697906384956881,
+      "validation_RMSE": 0.008895648415515451,
+      "validation_RMSE_std": 0.00892057156739956
+    },
+    {
+      "folds": 5,
+      "model": "linear_regression",
+      "selection_rank": 3,
+      "validation_MAE": 0.005644346956749907,
+      "validation_MAE_std": 0.003977073520510532,
+      "validation_R2": -1.0684754322482677,
+      "validation_RMSE": 0.009916203203689305,
+      "validation_RMSE_std": 0.01102705861139209
+    }
+  ]
 }
