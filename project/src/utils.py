@@ -1,4 +1,9 @@
 
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
 import pandas as pd
 
 
@@ -53,3 +58,34 @@ def parse_date_column(df, column="date"):
     df[column] = pd.to_datetime(df[column])
 
     return df
+
+
+def ensure_directory(path: str | Path) -> Path:
+    """Create a directory if needed and return it as a ``Path``."""
+
+    directory = Path(path)
+    directory.mkdir(parents=True, exist_ok=True)
+    return directory
+
+
+def write_json(data: dict, path: str | Path) -> Path:
+    """Write a JSON file with stable formatting."""
+
+    output_path = Path(path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(data, indent=2, sort_keys=True), encoding="utf-8")
+    return output_path
+
+
+def read_json(path: str | Path) -> dict:
+    """Read a UTF-8 JSON file."""
+
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+def assert_columns(dataframe: pd.DataFrame, columns: list[str]) -> None:
+    """Raise a helpful error when required columns are missing."""
+
+    missing = sorted(set(columns) - set(dataframe.columns))
+    if missing:
+        raise KeyError(f"Missing required columns: {missing}")

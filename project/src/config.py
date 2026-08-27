@@ -45,6 +45,11 @@ DATA_DIR = get_project_path("DATA_DIR", "data")
 RAW_DATA_DIR = get_project_path("RAW_DATA_DIR", "data/raw")
 PROCESSED_DATA_DIR = get_project_path("PROCESSED_DATA_DIR", "data/processed")
 REPORTS_DIR = get_project_path("REPORTS_DIR", "reports")
+MODEL_DIR = get_project_path("MODEL_DIR", "model")
+DOCS_DIR = get_project_path("DOCS_DIR", "docs")
+
+DEFAULT_START_DATE = get_config("START_DATE", "2018-01-01") or "2018-01-01"
+DEFAULT_END_DATE = get_config("END_DATE", "") or ""
 
 
 def masked_config_status() -> dict[str, str]:
@@ -56,5 +61,7 @@ def masked_config_status() -> dict[str, str]:
         "raw_data_dir": str(RAW_DATA_DIR),
         "processed_data_dir": str(PROCESSED_DATA_DIR),
         "reports_dir": str(REPORTS_DIR),
+        "model_dir": str(MODEL_DIR),
+        "docs_dir": str(DOCS_DIR),
         "env_file_present": str(ENV_FILE.exists()),
     }
