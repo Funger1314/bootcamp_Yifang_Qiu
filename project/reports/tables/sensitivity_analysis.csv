@@ -1,0 +1,4 @@
+scenario,MAE,RMSE,bias,assumption
+Naive persistence baseline,0.0038548789743183425,0.0063417627376447195,1.4752873957316027e-05,Different model/feature specification on the same chronological test period.
+Linear regression feature specification,0.0027750629178757993,0.004688283473454828,0.00016708434115283988,Different model/feature specification on the same chronological test period.
+Selected model (ridge),0.002774270856295324,0.004687927196891759,0.00016831973386063654,Different model/feature specification on the same chronological test period.
